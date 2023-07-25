@@ -3,8 +3,14 @@ AWS Lambda handler
 """
 from hashlib import md5
 
-import boto3
+from io import BytesIO
+
 from botocore.exceptions import ClientError
+import boto3
+from imagehash import average_hash
+from PIL import Image
+
+Image.MAX_IMAGE_PIXELS = None
 
 s3 = boto3.client("s3")
 dynamodb = boto3.resource("dynamodb")
@@ -23,13 +29,9 @@ def lambda_handler(event, context):
     else:
         obj = response["Body"].read()
 
-    record_to_db(obj, bucket, key)
+    image = Image.open(BytesIO(obj))
+    hash_val = str(average_hash(image))
 
-
-def record_to_db(obj, bucket, key):
-    hash_val = hash_log(obj)
-
-    table = dynamodb.Table("WellLogs")
     item = {
         "Id": hash_val,
         "Bucket": bucket,
@@ -37,8 +39,11 @@ def record_to_db(obj, bucket, key):
     }
 
     try:
-        table.put_item(Item=item)
-        print(f"Added TIFF to {bucket}")
+        table.put_item(
+            Item=item,
+            ConditionExpression="attribute_not_exists(Id)"
+        )
+        print("Added well log data to the database")
     except ClientError as error:
         if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
             print("TIFF file already exists!")
@@ -46,22 +51,3 @@ def record_to_db(obj, bucket, key):
             raise error
     except Exception as error:
         raise error
-
-
-def hash_log(byte_string):
-    hash_val = md5(byte_string)
-
-    return hash_val.hexdigest()
-
-
-def main(file_path):
-    with open(sys.argv[1], "rb") as f:
-        hash_val = hash_log(f.read())
-
-    return hash_val
-
-
-if __name__ == "__main__":
-    import sys
-
-    print(main(sys.argv[1]))
