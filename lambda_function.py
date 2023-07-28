@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """
 AWS Lambda handler
 """
@@ -6,15 +7,13 @@ from hashlib import md5
 from io import BytesIO
 
 from botocore.exceptions import ClientError
+=======
+>>>>>>> 5ba8c2c (Restructure project as a Python package)
 import boto3
-from imagehash import average_hash
-from PIL import Image
 
-Image.MAX_IMAGE_PIXELS = None
+from wells.database import record_to_db
 
 s3 = boto3.client("s3")
-dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table("WellLogs")
 
 
 def lambda_handler(event, context):
@@ -29,25 +28,4 @@ def lambda_handler(event, context):
     else:
         obj = response["Body"].read()
 
-    image = Image.open(BytesIO(obj))
-    hash_val = str(average_hash(image))
-
-    item = {
-        "Id": hash_val,
-        "Bucket": bucket,
-        "S3Key": key,
-    }
-
-    try:
-        table.put_item(
-            Item=item,
-            ConditionExpression="attribute_not_exists(Id)"
-        )
-        print("Added well log data to the database")
-    except ClientError as error:
-        if error.response["Error"]["Code"] == "ConditionalCheckFailedException":
-            print("TIFF file already exists!")
-        else:
-            raise error
-    except Exception as error:
-        raise error
+    record_to_db(obj, bucket, key)
