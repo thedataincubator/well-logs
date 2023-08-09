@@ -1,3 +1,6 @@
+"""
+AWS Lambda handler
+"""
 from hashlib import md5
 
 import boto3
