@@ -9,7 +9,7 @@ create() {
 }
 
 delete() {
-  aws s3api delete-bucket --bucket "$SOURCE_BUCKET"
+  aws s3 rm s3://"$SOURCE_BUCKET" --recursive --exclude "*" --include "*.tif"
 }
 
 
