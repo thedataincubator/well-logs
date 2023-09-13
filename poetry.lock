@@ -22,14 +22,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.31.41"
+version = "1.31.46"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.31.41-py3-none-any.whl", hash = "sha256:c33a453328d361c089e6a8f9dd671a7b939288e539e6550c7030152e8162e906"},
-    {file = "botocore-1.31.41.tar.gz", hash = "sha256:4dad7c5a5e70940de54ebf8de3955450c1f092f43cacff8103819d1e7d5374fa"},
+    {file = "botocore-1.31.46-py3-none-any.whl", hash = "sha256:ac0c1258b1782cde42950bd00138fdce6bd7d04855296af8c326d5844a426473"},
+    {file = "botocore-1.31.46.tar.gz", hash = "sha256:6c30be3371624a80d6a881d9c7771a80e0eb82697ee374aaf522cd59b76e14dd"},
 ]
 
 [package.dependencies]
@@ -69,14 +69,14 @@ test = ["pytest (>=6)"]
 
 [[package]]
 name = "imagehash"
-version = "4.3.1"
+version = "4.3.0"
 description = "Image Hashing library"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ImageHash-4.3.1-py2.py3-none-any.whl", hash = "sha256:5ad9a5cde14fe255745a8245677293ac0d67f09c330986a351f34b614ba62fb5"},
-    {file = "ImageHash-4.3.1.tar.gz", hash = "sha256:7038d1b7f9e0585beb3dd8c0a956f02b95a346c0b5f24a9e8cc03ebadaf0aa70"},
+    {file = "ImageHash-4.3.0-py2.py3-none-any.whl", hash = "sha256:afe0bcb17c88e6f28fd69b91f05c4f207b3d5018431c3f3e632af2162e451d03"},
+    {file = "ImageHash-4.3.0.tar.gz", hash = "sha256:3e843fed202105374b71767f93e6791a476dc92d212668dd3a6db61bfb18faf9"},
 ]
 
 [package.dependencies]
@@ -419,4 +419,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "72c67a6bea99bab719246a36c045e97ad0b3183450bbb93e150961f4c86180c2"
+content-hash = "7427b257a8ee4e5d9efffc7ba13b5e870441bf753d39a2c3054add946e320f05"
