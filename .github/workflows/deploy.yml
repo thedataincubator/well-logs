@@ -1,0 +1,47 @@
+name: Deploy Lambda AWS Code
+
+on:
+  workflow_run:
+    workflows: [More Complex Python Test]
+    types: [completed]
+    branches: [master]
+
+  push:
+    branches: [master]
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: Install aws-cli
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install awscli
+      - name: Deploy
+        env:
+          AWS_DEFAULT_REGION: "us-east-1"
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          FUNCTION_NAME: ${{ vars.FUNCTION_NAME }}
+          SOURCE_BUCKET: ${{ vars.SOURCE_BUCKET }}
+        run: |
+          source <(head --lines=-1 bin/lambda.sh | tail --lines=+11)
+          package_deployment
+          aws lambda update-function-code --function-name "$FUNCTION_NAME" --s3-bucket "$SOURCE_BUCKET" --s3-key deployment.zip
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: |
+          echo "Code will not deploy because previous workflows have failed!"
+          exit 1
+
+permissions:
+    contents: read
