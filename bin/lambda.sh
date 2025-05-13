@@ -1,8 +1,13 @@
 #!/bin/bash
 set -eu
 
+if [[ ! -e configs/config  ]]; then
+  echo "You are missing configs/config file"
+  echo "Make sure to create one using configs/config.template as an example"
+  exit 1
+fi
+
 source configs/config
-set +e
 source bin/usage.sh
 
 role_name="$FUNCTION_NAME"Role
